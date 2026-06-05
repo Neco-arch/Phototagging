@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.target {
+    border-radius: 20%;
+}
+
+.target_wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
+}

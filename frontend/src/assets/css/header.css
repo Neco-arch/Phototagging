@@ -1,0 +1,15 @@
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: auto;
+}
+
+.nav_link {
+    display: flex;
+    gap: 2rem;
+}
+
+.logo_img {
+    width: 125px;
+}
