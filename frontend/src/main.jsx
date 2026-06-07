@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
     <Header/>
     <Routes>
       <Route element={<Mainpage/>} path='/'/>
-      <Route element={<Gamepage/>}path='/map/:mapid'/>
+      <Route element={<Gamepage/>}path='/map/:mapname'/>
     </Routes>
     </BrowserRouter>
   </StrictMode>

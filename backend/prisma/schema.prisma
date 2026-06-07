@@ -15,14 +15,14 @@ datasource db {
 model Map {
   id          Int          @id @default(autoincrement())
   map_name    String
-  coordinates Coordinate[]  
+  coordinates Coordinate[]
 }
 
 model Coordinate {
   id        Int    @id @default(autoincrement())
   character String
-  posx      Int
-  posy      Int
-  map_id    Int           
+  posx      Float
+  posy      Float
+  map_id    Int
   map       Map    @relation(fields: [map_id], references: [id])
 }

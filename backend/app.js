@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const validate = require('./src/Routes/validate.js');
+const validate = require('./src/Routes/validateRoute.js');
 
 const app = express();
 
