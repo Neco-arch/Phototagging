@@ -1,6 +1,8 @@
 const { prisma } = require('../lib/prisma.js')
 
 async function Gettarget(req, res, next) {
+
+
     const PosX = req.body.posx
     const PosY = req.body.posy
     const character = req.body.character
@@ -16,12 +18,14 @@ async function Gettarget(req, res, next) {
         }
     })
 
+
     const result = await prisma.coordinate.findMany({
         where: {
             map_id: mapid.id,
             character: character
         }
     })
+
 
     if (mapid.length === 0) {
         return res.status(404).json({ error: "Map not found." });
@@ -36,26 +40,24 @@ async function Gettarget(req, res, next) {
     req.posy = PosY
     req.screenWidth = screenWidth
     req.screenHeight = screenHeight
+
     next()
 }
 
 async function Validate(req, res, next) {
-    const TOLERANCE = 0.005
-    const currenttarget = req.target[0]
+    const TOLERANCE = 0.05;
+    const currenttarget = req.target[0];
 
-    console.log(req.screenWidth)
-    const dx = (currenttarget.posx - req.posx) / req.screenWidth;
-    const dy = (currenttarget.posy - req.posy) / req.screenHeight;
+    const dx = currenttarget.posx - req.posx;
+    const dy = currenttarget.posy - req.posy;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    console.log(distance)
 
     if (distance <= TOLERANCE) {
-        res.send("Matched")
+        res.send("Matched");
     } else {
-        res.send("Not matched")
+        res.send("Not matched");
     }
-
 }
 
 module.exports = { Gettarget, Validate } 

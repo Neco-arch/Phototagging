@@ -1,0 +1,18 @@
+.Start_Game {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+
+  /* Optional: dim the background */
+  border: none;
+  background: white;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+}
+
+.Play_game {
+    width: 250px;
+    height: 50px;
+    border-radius: 5%;
+}
