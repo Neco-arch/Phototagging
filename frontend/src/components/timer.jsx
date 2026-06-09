@@ -5,7 +5,7 @@ export default function Timer({ sec , gameend , gamestart }) {
     
     if (gamestart) {
         return(<h2>
-            { sec }
+            { parseFloat(sec) }
         </h2>)
     }
 

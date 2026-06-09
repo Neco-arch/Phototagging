@@ -1,8 +1,7 @@
 const { prisma } = require('../lib/prisma.js')
 
 async function Gettarget(req, res, next) {
-
-
+    
     const PosX = req.body.posx
     const PosY = req.body.posy
     const character = req.body.character

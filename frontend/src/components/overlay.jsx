@@ -6,10 +6,14 @@ function Redirect_main() {
 }
 
 
-export  function Startgameoverlay({ gamestart , onclick , }) {
+
+
+export  function Startgameoverlay({ gamestart , onclick , onchange}) {
     if (!gamestart) {
+
         return (
         <dialog className="Start_Game" open={ !gamestart }>
+                <input type='text' placeholder='username' onChange={(e) => onchange(e.target.value)}/>
                 <button onClick={onclick} className='Play_game'>Play game</button>
                 <button  onClick={Redirect_main} className='Play_game'> Back to homepage</button>
         </dialog> )

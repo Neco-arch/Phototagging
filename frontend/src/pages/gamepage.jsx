@@ -16,7 +16,7 @@ import Timer from "../components/timer";
 
 export default function Gamepage() {
   let imgsrc;
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(parseFloat(0));
   const [gamestart, setgamestart] = useState(false);
   const [gameend, setgameend] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
@@ -27,6 +27,11 @@ export default function Gamepage() {
     y: 0,
     normalizeX: 0,
     normalizeY: 0,
+  });
+
+  const [userdata, saveuserdata] = useState({
+    username: null,
+    time: null,
   });
 
   const [targetdata, savetargetdata] = useState([
@@ -62,20 +67,26 @@ export default function Gamepage() {
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
     };
-  
+
     const request = await axios.post(
       "http://localhost:3000/validate",
-      requestbody
+      requestbody,
     );
-    
+
     if (request.data === "Matched") {
       savetargetdata(
         targetdata.map((target) =>
-          target.name === charactername ? { ...target, found: true } : target
-        )
+          target.name === charactername ? { ...target, found: true } : target,
+        ),
       );
     }
   };
+
+  const onchangesaveuserdata = (value) => {
+    saveuserdata((prev) => ({...prev , username : value}))
+    console.log(value)
+    console.log(userdata)
+  }
 
   const clicktag = (e) => {
     chooseTarget(e, e.target.dataset.user);
@@ -86,18 +97,28 @@ export default function Gamepage() {
   };
 
   const clickrestartgame = () => {
-    setgamestart(false)
-    setgameend(false)
+    setgamestart(false);
+    setgameend(false);
     savetargetdata([
-    { name: "Exicting guy", found: false },
-    { name: "Panic guy", found: false },
-    { name: "Chill guy", found: false },
-  ])
-  }
+      { name: "Exicting guy", found: false },
+      { name: "Panic guy", found: false },
+      { name: "Chill guy", found: false },
+    ]);
+    saveuserdata({
+      username: null,
+      time: null,
+    });
+  };
 
-  const stoptime = () => {
-
-  }
+  const senduserdata = async () => {
+    const result = await axios.post(
+      "http://localhost:3000/leaderboard/adduser",
+      {
+        userdata,
+      },
+    );
+    return result;
+  };
 
   useEffect(() => {
     let founded = 0;
@@ -105,34 +126,35 @@ export default function Gamepage() {
       if (targetdata[i].found === true) {
         founded = founded + 1;
         if (founded === 3) {
-          setgameend(prev => true);
-        } 
+          setgameend((prev) => true);
+        }
       }
     }
   }, [targetdata]);
 
   useEffect(() => {
-    let interval = null
+    let interval = null;
     if (gamestart && !gameend) {
-    interval = setInterval(() => {
-      setTime((time) => time + 1)
-    },1000)
-    } 
+      interval = setInterval(() => {
+        setTime((prev) => parseFloat((prev + 0.1).toFixed(1)));
+      }, 100);
+    }
+    // add user to leaderboard
     if (gameend) {
-      return // Return Api
+      saveuserdata({
+        username: userdata.username,
+        time: time,
+      });
+      setTime(0)
+      senduserdata();
     }
-    else {
-      clearInterval(interval)
-    }
-    return () => {
-      clearInterval(interval)
-    }
-  } , [gamestart , gameend])
+    return () => clearInterval(interval);
+  }, [gamestart, gameend]);
 
   return (
     <main>
-      <Endgameoverlay  gameended={ gameend } onclick={ clickrestartgame}/>
-      <Startgameoverlay gamestart={gamestart} onclick={clickstartgame} />
+      <Endgameoverlay gameended={gameend} onclick={clickrestartgame} />
+      <Startgameoverlay gamestart={gamestart} onclick={clickstartgame} onchange={onchangesaveuserdata}/>
       <div className="target_wrapper">
         <Targetimg
           imgsrc={First_target}
@@ -150,8 +172,8 @@ export default function Gamepage() {
           hasfound={targetdata[2].found}
         />
       </div>
-        <div className="timerwarpper">
-        <Timer gameend={ gameend} gamestart={ gamestart} sec={ time}/>
+      <div className="timerwarpper">
+        <Timer gameend={gameend} gamestart={gamestart} sec={time} />
       </div>
       <div className="level">
         <Targetbox

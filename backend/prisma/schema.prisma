@@ -26,3 +26,9 @@ model Coordinate {
   map_id    Int
   map       Map    @relation(fields: [map_id], references: [id])
 }
+
+model leaderboard {
+  id       Int    @id @default(autoincrement())
+  username String
+  time     Float
+}
