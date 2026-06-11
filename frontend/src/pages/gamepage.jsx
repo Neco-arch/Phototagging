@@ -84,8 +84,6 @@ export default function Gamepage() {
 
   const onchangesaveuserdata = (value) => {
     saveuserdata((prev) => ({...prev , username : value}))
-    console.log(value)
-    console.log(userdata)
   }
 
   const clicktag = (e) => {
@@ -99,6 +97,7 @@ export default function Gamepage() {
   const clickrestartgame = () => {
     setgamestart(false);
     setgameend(false);
+    settargetboxvisiblity(false)
     savetargetdata([
       { name: "Exicting guy", found: false },
       { name: "Panic guy", found: false },
@@ -110,13 +109,13 @@ export default function Gamepage() {
     });
   };
 
-  const senduserdata = async () => {
+  const senduserdata = async (data) => {
     const result = await axios.post(
       "http://localhost:3000/leaderboard/adduser",
-      {
-        userdata,
-      },
+      data,
     );
+
+    console.log(result)
     return result;
   };
 
@@ -136,17 +135,18 @@ export default function Gamepage() {
     let interval = null;
     if (gamestart && !gameend) {
       interval = setInterval(() => {
-        setTime((prev) => parseFloat((prev + 0.1).toFixed(1)));
+        setTime((prev) => parseFloat((prev + 0.1).toFixed(2)));
       }, 100);
     }
     // add user to leaderboard
     if (gameend) {
-      saveuserdata({
-        username: userdata.username,
-        time: time,
-      });
+      const finaldata = {
+        username : userdata.username,
+        time : time
+      }
       setTime(0)
-      senduserdata();
+      saveuserdata(finaldata)
+      senduserdata(finaldata);
     }
     return () => clearInterval(interval);
   }, [gamestart, gameend]);
